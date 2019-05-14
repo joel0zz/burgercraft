@@ -3,8 +3,7 @@
         <a class="navbar-brand" href="{{ url_for('blog_app.landing') }}">
             {{ config['BLOG_NAME'] }}
         </a>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav ml-auto">
+            <ul class="navbar-nav ml-auto navbar-right">
                 {% if session.id %}
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('blog_app.index') }}"><i class="fas fa-question">&nbsp;</i>Blog</a>
@@ -30,6 +29,5 @@
                     </li>
                 {% endif %}
             </ul>
-        </div>
     </nav>
 </div>
