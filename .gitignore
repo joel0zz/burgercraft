@@ -214,3 +214,6 @@ fabric.properties
 
 # Sonarlint plugin
 .idea/sonarlint
+
+# config file for DB connections etc.
+config.py
