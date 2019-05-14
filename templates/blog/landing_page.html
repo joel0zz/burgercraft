@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} - {{ config['BLOG_NAME'] }}{% endblock %}
+
+{% block nav %}{% include 'nav.html' %}{% endblock %}
+
+{% block content %}
+
+<header class="jumbotron jumbotron-fluid">
+    <div class="container-fluid text-center">
+       <h1 class="display-3 text-success" ></h1>
+       <p class="lead pb-4"></p>
+    </div>
+
+<style>
+        .jumbotron {
+    background: url("{{ url_for('static', filename='') }}") no-repeat center;
+}
+</style>
+
+</header>
+
+
+<div class="container vertical-center">
+    <div class="col-md-4">
+      <div class="thumbnail">
+        <a href="https://{{ config['REGION'] }}.amazonaws.com/{{ config['BUCKET_NAME'] }}/mikeller.png" target="_blank">
+          <img src="https://{{ config['REGION'] }}.amazonaws.com/{{ config['BUCKET_NAME'] }}/mikeller.png" alt="Nature" style="width:100%">
+          <div class="caption">
+          </div>
+        </a>
+      </div>
+    </div>
+</div>
+
+
+<section class="container-fluid text-right py-1 mt-1" id="contact">
+   <h2 class="display-4 pb-4 my-2">Had a standout burger or beer?</h2>
+   <p class="lead pb-3">Share with the rest of us at burgercraft.</p>
+    <a type="button" class="btn btn-primary" href="{{ url_for('author_app.register') }}" role="button">Register</a>
+
+</section>
+
+
+{% endblock %}

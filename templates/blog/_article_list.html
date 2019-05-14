@@ -1,0 +1,25 @@
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style0z.css') }}"/>
+
+<div class="post-list">
+            {% for post in posts.items %}
+            <div class="row post-item pt-3">
+                <div class="col-md-9">
+                    <h5><a class="text-primary text-uppercase" href="{{ url_for('blog_app.article', slug=post.slug) }}">{{ post.title }}</a></h5>
+                    <div class="test">{{ post.body[:220] }}</div>
+                    <div class="text-muted">Posted by {{ post.author.username }} | {{
+                        post.publish_date.strftime('%d-%m-%Y') }}
+                        {% if post.category %}
+                        | <a class="text-custom text-uppercase" href="{{ url_for('.categories', category_id=post.category.id) }}">
+                            {{ post.category.name }}</a>
+                        {% endif %}
+                    </div>
+                </div>
+            <div class="col-md-3">
+                {% if post.image %}
+                <img src="https://{{ config['REGION'] }}.amazonaws.com/{{ config['BUCKET_NAME'] }}/{{ post.image }}.png" class="img-thumbnail" />
+                {% endif %}
+            </div>
+            </div>
+            <hr />
+            {% endfor %}
+        </div>

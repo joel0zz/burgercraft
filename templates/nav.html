@@ -1,0 +1,35 @@
+<div class="container pb-3">
+    <nav class="navbar navbar-expand-lg">
+        <a class="navbar-brand" href="{{ url_for('blog_app.landing') }}">
+            {{ config['BLOG_NAME'] }}
+        </a>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav ml-auto">
+                {% if session.id %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('blog_app.index') }}"><i class="fas fa-question">&nbsp;</i>Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('blog_app.post') }}"><i class="fas fa-plus">&nbsp;</i>
+                            New Post
+                        </a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('author_app.profile') }}"><i class="fas fa-portrait">&nbsp;</i>
+                            Profile
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('author_app.logout') }}"><i class="fas fa-sign-out-alt">&nbsp;</i>Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('blog_app.index') }}"><i class="fas fa-question">&nbsp;</i>Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('author_app.login') }}"><i class="fas fa-sign-in-alt">&nbsp;</i>Login</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+</div>

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+
+{% block title %}{{ post.title }}{% endblock %}
+
+{% block nav %}{% include 'nav.html' %}{% endblock %}
+
+{% block content %}
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style0z.css') }}"/>
+
+<div class="row">
+
+    <div class="offset-md-2 col-md-8" >
+
+        {% include '_flashmessages.html' %}
+
+        {% if post.image %}
+        <div class="container pt-3">
+            <img src="https://{{ config['REGION'] }}.amazonaws.com/{{ config['BUCKET_NAME'] }}/{{ post.image }}.png" class="img-fluid" />
+        </div>
+        {% endif %}
+
+        <h1 class="pt-3">{{ post.title }}</h1>
+
+        <div class="test">{{ post.body|markdown }}</div>
+
+        <div class="text-muted">
+            Posted by {{ post.author.username }} | {{ post.publish_date.strftime('%d-%m-%Y') }}
+            {% if post.category %}
+            | <a href="{{ url_for('.categories', category_id=post.category.id) }}">
+                {{ post.category.name }}
+            </a>
+            {% endif %}
+            {% if session.id == post.author.id %}
+            - <a href="{{ url_for('.edit', slug=post.slug) }}">Edit</a>
+            - <a href="#deleteModal" data-toggle="modal">Delete</a>
+            {% endif %}
+
+        </div>
+    <hr />
+             {% for comment in post.comments %}
+            <p>{{ comment.name }}: {{ comment.comment }} | {{ comment.comment_date.strftime('%d-%m-%Y') }}</p>
+            {% endfor %}
+
+            {% if session.id %}
+            {% from "_formhelpers.html" import render_field %}
+            <form method="POST" action="{{ url_for('.article', slug=post.slug) }}" enctype="multipart/form-data"
+                      role="form">
+
+            {{ form.hidden_tag() }}
+            {{ render_field(form.comment, class='form-control', rows=10) }}
+                <a type="button" class="btn btn-primary" href="{{ prev_url }}" role="button">Back</a>
+                <button type="submit" class="btn btn-primary">Comment</button>
+            </form>
+            {% endif %}
+    </div>
+
+</div>
+
+
+<!-- The Modal (confirm deletion) -->
+<div class="modal" id="deleteModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Are you sure you want to delete the post "{{ post.title }}"?</h4>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+           <a type="button" class="btn btn-primary" href="{{ url_for('.delete', slug=post.slug) }}" role="button">Yes</a>
+           <button type="button" class="btn btn-danger" data-dismiss="modal">No</button>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
+
+
+
+
+

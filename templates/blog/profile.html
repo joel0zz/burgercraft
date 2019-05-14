@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}Profile{% endblock %}
+
+{% block nav %}{% include 'nav.html' %}{% endblock %}
+
+{% block content %}
+
+    {% include '_flashmessages.html' %}
+    {% from "_formhelpers.html" import render_field %}
+
+<h3>Hi {{ author.username }},</h3>
+
+        <div class="row">
+        <div class="offset-md-2 col-md-8">
+
+    <div class="container-fluid">
+    <div class="row">
+        <div class="col-lg-6">
+            <button type="button" class="btn-lg btn-primary btn-block" data-toggle="modal" data-target="#passwordModal">Change Password</button>
+            <button type="button" class="btn-lg btn-primary btn-block" data-toggle="modal" data-target="#usernameModal">Change Username</button>
+        </div>
+
+        <div class="col-lg-6">
+        <h4>Your Recent Posts</h4>
+            {% for post in posts %}
+            <h5><a class="text-primary text-uppercase" href="{{ url_for('blog_app.article', slug=post.slug) }}">{{ post.title }}</a></h5>
+            {% endfor %}
+
+        </div>
+    </div>
+</div>
+        </div>
+        </div>
+
+
+<!-- The Modal (Password change) -->
+<div class="modal" id="passwordModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Change Password</h4>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+       <form method="POST" action="" role="form">
+        {{ password_form.hidden_tag()  }}
+           {{ render_field(password_form.password, class='form-control') }}
+           {{ render_field(password_form.confirm, class='form-control') }}
+
+           <button type="submit" class="btn btn-primary">Submit</button>
+
+       </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<!-- The Modal (Username Change) -->
+<div class="modal" id="usernameModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <h4 class="modal-title">Change Username</h4>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <form method="POST" action="" role="form">
+        {{ username_form.hidden_tag()  }}
+           {{ render_field(username_form.username, class='form-control') }}
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+
+       </form>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+{% endblock %}
