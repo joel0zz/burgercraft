@@ -30,4 +30,3 @@ application.register_blueprint(author_app)
 
 if __name__ == "__main__":
     application.run()
-    db.session.rollback()

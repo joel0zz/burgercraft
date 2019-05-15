@@ -125,9 +125,10 @@ def post():
         slug = slugify(str(post.id) + "-" + post.title)
         post.slug = slug
         db.session.commit()
+        db.session.refresh(post)
 
         flash('Article Posted', 'success')
-        return redirect(url_for('.article', slug=slug))
+        return redirect(url_for('.index'))
 
     return render_template('blog/post.html', form=form, action='new')
 
