@@ -5,7 +5,7 @@
             <div class="row post-item pt-3">
                 <div class="col-md-9">
                     <h5><a class="text-primary text-uppercase" href="{{ url_for('blog_app.article', slug=post.slug) }}">{{ post.title }}</a></h5>
-                    <div class="test">FUCK ME</div>
+                    <div class="test">{{ post.body[:220] }}</div>
                     <div class="text-muted">Posted by {{ post.author.username }} | {{
                         post.publish_date.strftime('%d-%m-%Y') }}
                         {% if post.category %}
