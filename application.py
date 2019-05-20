@@ -3,8 +3,6 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flaskext.markdown import Markdown
 
-
-
 # setup db
 db = SQLAlchemy()
 
@@ -28,5 +26,6 @@ from author.views import author_app
 application.register_blueprint(blog_app)
 application.register_blueprint(author_app)
 
-if __name__ == "__main__":
+if __name__ == '__main__':
+    application.debug = True
     application.run()

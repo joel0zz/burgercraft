@@ -57,6 +57,7 @@ def profile():
         hashed_password = generate_password_hash(password_form.password.data)  # generate hash from pass form data.
         author.password = hashed_password  # change authors password
         db.session.commit()
+        db.session.close()
         flash("Password successfully changed.", "success")
 
     if username_form.validate_on_submit():
@@ -64,6 +65,7 @@ def profile():
         author.username = username
         db.session.commit()
         db.session.refresh(author)
+        db.session.close()
         flash("Username successfully changed.", "success")
 
     return render_template('blog/profile.html', posts=posts, password_form=password_form, username_form=username_form, author=author)
@@ -76,7 +78,7 @@ def landing():
 
 @blog_app.route('/post', methods=('GET', 'POST'))
 @login_required_check_confirmed
-@limiter.limit("5/hour")
+#@limiter.limit("5/hour")
 def post():
     form = PostForm()
 
@@ -125,7 +127,7 @@ def post():
         slug = slugify(str(post.id) + "-" + post.title)
         post.slug = slug
         db.session.commit()
-        db.session.refresh(post)
+        db.session.close()
 
         flash('Article Posted', 'success')
         return redirect(url_for('.index'))
@@ -135,10 +137,10 @@ def post():
 
 # no un-auth comments? all users must be signed up to comment.
 @blog_app.route('/posts/<slug>', methods=['GET', 'POST'])
-@limiter.limit("20/hour")
+#@limiter.limit("20/hour")
 def article(slug):
     form = CommentForm()
-    post = Post.query.filter_by(slug=slug).first_or_404()
+    post = Post.query.filter_by(slug=slug).first()
     prev_url = request.referrer
 
     if form.validate_on_submit():
@@ -151,6 +153,7 @@ def article(slug):
         post.comments.append(comment)  # append comment to post (comments field of the model)
         db.session.add(comment)
         db.session.commit()
+        db.session.close()
         flash("Thank you for taking the time to comment.", 'success')
         return redirect(url_for('.article', slug=slug))
 
@@ -198,6 +201,7 @@ def edit(slug):
             post.slug = slugify(str(post.id) + '-' + form.title.data)
 
         db.session.commit()
+        db.session.close()
         flash('Article Edited', 'success')
         return redirect(url_for('.article', slug=post.slug))
 
@@ -210,6 +214,7 @@ def delete(slug):
         post = Post.query.filter_by(slug=slug).first_or_404()
         post.live = False
         db.session.commit()
+        db.session.close()
         flash('Article deleted', 'success')
         return redirect(url_for('.index'))
 
