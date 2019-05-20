@@ -14,6 +14,7 @@ def create_app():
     # load config
     #application.config.from_pyfile('config/config.py')
     application.config.from_mapping(
+        BLOG_NAME=os.environ.get('BLOG_NAME'),
         SECRET_KEY=os.environ.get('SECRET_KEY'),
         SECURITY_PASSWORD_SALT=os.environ.get('SECURITY_PASSWORD_SALT'),
         DB_USERNAME=os.environ.get('DB_USERNAME'),
