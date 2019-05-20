@@ -16,7 +16,7 @@ from author.models import Author
 from Blog.forms import PostForm, CommentForm
 from author.forms import ResetPasswordForm, ChangeUsernameForm
 from author.decorators import login_required_check_confirmed, login_required
-from config import BUCKET_NAME
+from config.config import BUCKET_NAME
 
 
 limiter = Limiter(

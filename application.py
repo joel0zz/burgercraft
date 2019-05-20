@@ -9,7 +9,7 @@ db = SQLAlchemy()
 application = Flask(__name__)
 
 # load config
-application.config.from_pyfile('config.py')
+application.config.from_pyfile('config/config.py')
 
 # initialize db
 db.init_app(application)
