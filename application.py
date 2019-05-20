@@ -21,7 +21,8 @@ def create_app():
         DB_PASSWORD=os.environ.get('DB_PASSWORD'),
         DB_HOST=os.environ.get('DB_HOST'),
         DATABASE_NAME=os.environ.get('DATABASE_NAME'),
-        SQLALCHEMY_DATABASE_URI=os.environ.get('SQLALCHEMY_DATABASE_URI'),
+        #DATABASE_URL=os.environ.get('DATABASE_URL'),
+        SQLALCHEMY_DATABASE_URI=os.environ.get('DATABASE_URL'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
 
         MAIL_SERVER=os.environ.get('MAIL_SERVER'),
