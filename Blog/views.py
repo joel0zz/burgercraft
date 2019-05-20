@@ -11,7 +11,7 @@ import os
 
 blog_app = Blueprint('blog_app', __name__)
 
-from application import db, application
+from application import db, create_app
 from Blog.models import Post, Category, Comment
 from author.models import Author
 from Blog.forms import PostForm, CommentForm
@@ -21,7 +21,7 @@ from author.decorators import login_required_check_confirmed, login_required
 BUCKET_NAME = os.environ.get('BUCKET_NAME')
 
 limiter = Limiter(
-        application,
+        create_app(),
         key_func=get_remote_address
     )
 

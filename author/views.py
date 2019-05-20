@@ -7,11 +7,12 @@ from threading import Thread
 
 author_app = Blueprint('author_app', __name__)
 
-from application import db, application
+from application import db, create_app
 from author.models import Author
 from author.forms import RegisterForm, LoginForm, SendPasswordResetForm, ResetPasswordForm
 from author.decorators import login_required, already_logged_in
 
+application = create_app()
 mail = Mail(application)
 
 @author_app.route('/register', methods=['GET', 'POST'])

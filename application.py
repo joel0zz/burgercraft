@@ -7,47 +7,49 @@ import os
 # setup db
 db = SQLAlchemy()
 
-application = Flask(__name__)
 
-# load config
-#application.config.from_pyfile('config/config.py')
-application.config.from_mapping(
-    SECRET_KEY=os.environ.get('SECRET_KEY'),
-    SECURITY_PASSWORD_SALT=os.environ.get('SECURITY_PASSWORD_SALT'),
-    DB_USERNAME=os.environ.get('DB_USERNAME'),
-    DB_PASSWORD=os.environ.get('DB_PASSWORD'),
-    DB_HOST=os.environ.get('DB_HOST'),
-    DATABASE_NAME=os.environ.get('DATABASE_NAME'),
-    SQLALCHEMY_DATABASE_URI=os.environ.get('SQLALCHEMY_DATABASE_URI'),
-    SQLALCHEMY_TRACK_MODIFICATIONS=False,
+def create_app():
+    application = Flask(__name__)
 
-    MAIL_SERVER=os.environ.get('MAIL_SERVER'),
-    MAIL_PORT=os.environ.get('MAIL_PORT'),
-    MAIL_USERNAME=os.environ.get('MAIL_USERNAME'),
-    MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD'),
-    MAIL_DEFAULT_SENDER=os.environ.get('MAIL_DEFAULT_SENDER'),
-    MAIL_USE_TLS=True,
-    MAIL_USE_SSL=False,
+    # load config
+    #application.config.from_pyfile('config/config.py')
+    application.config.from_mapping(
+        SECRET_KEY=os.environ.get('SECRET_KEY'),
+        SECURITY_PASSWORD_SALT=os.environ.get('SECURITY_PASSWORD_SALT'),
+        DB_USERNAME=os.environ.get('DB_USERNAME'),
+        DB_PASSWORD=os.environ.get('DB_PASSWORD'),
+        DB_HOST=os.environ.get('DB_HOST'),
+        DATABASE_NAME=os.environ.get('DATABASE_NAME'),
+        SQLALCHEMY_DATABASE_URI=os.environ.get('SQLALCHEMY_DATABASE_URI'),
+        SQLALCHEMY_TRACK_MODIFICATIONS=False,
 
-    BUCKET_NAME=os.environ.get('BUCKET_NAME'),
-    REGION=os.environ.get('REGION')
-)
+        MAIL_SERVER=os.environ.get('MAIL_SERVER'),
+        MAIL_PORT=os.environ.get('MAIL_PORT'),
+        MAIL_USERNAME=os.environ.get('MAIL_USERNAME'),
+        MAIL_PASSWORD=os.environ.get('MAIL_PASSWORD'),
+        MAIL_DEFAULT_SENDER=os.environ.get('MAIL_DEFAULT_SENDER'),
+        MAIL_USE_TLS=True,
+        MAIL_USE_SSL=False,
 
-# initialize db
-db.init_app(application)
-migrate = Migrate(application, db)
+        BUCKET_NAME=os.environ.get('BUCKET_NAME'),
+        REGION=os.environ.get('REGION')
+    )
 
-# Markdown
-Markdown(application)
+    # initialize db
+    db.init_app(application)
+    migrate = Migrate(application, db)
 
-# import blueprints
-from Blog.views import blog_app
-from author.views import author_app
+    # Markdown
+    Markdown(application)
 
-# register blueprints
-application.register_blueprint(blog_app)
-application.register_blueprint(author_app)
+    # import blueprints
+    from Blog.views import blog_app
+    from author.views import author_app
 
-if __name__ == '__main__':
-    application.debug = True
-    application.run()
+    # register blueprints
+    application.register_blueprint(blog_app)
+    application.register_blueprint(author_app)
+
+    return application
+
+
