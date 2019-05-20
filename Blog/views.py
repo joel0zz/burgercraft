@@ -7,6 +7,7 @@ from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import boto3
 import io
+import os
 
 blog_app = Blueprint('blog_app', __name__)
 
@@ -16,8 +17,8 @@ from author.models import Author
 from Blog.forms import PostForm, CommentForm
 from author.forms import ResetPasswordForm, ChangeUsernameForm
 from author.decorators import login_required_check_confirmed, login_required
-from config.config import BUCKET_NAME
 
+BUCKET_NAME = os.environ.get('BUCKET_NAME')
 
 limiter = Limiter(
         application,
