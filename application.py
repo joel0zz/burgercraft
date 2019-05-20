@@ -6,7 +6,7 @@ import os
 
 # setup db
 db = SQLAlchemy()
-
+migrate = Migrate()
 
 def create_app():
     application = Flask(__name__)
@@ -39,7 +39,7 @@ def create_app():
 
     # initialize db
     db.init_app(application)
-    migrate = Migrate(application, db)
+    migrate.init_app(application, db)
 
     # Markdown
     Markdown(application)
