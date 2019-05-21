@@ -2,26 +2,22 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flaskext.markdown import Markdown
+from flask_talisman import Talisman
 import os
 
 # setup db
 db = SQLAlchemy()
 migrate = Migrate()
 
+
 def create_app():
     application = Flask(__name__)
 
     # load config
-    #application.config.from_pyfile('config/config.py')
     application.config.from_mapping(
         BLOG_NAME=os.environ.get('BLOG_NAME'),
         SECRET_KEY=os.environ.get('SECRET_KEY'),
         SECURITY_PASSWORD_SALT=os.environ.get('SECURITY_PASSWORD_SALT'),
-        #DB_USERNAME=os.environ.get('DB_USERNAME'),
-        #DB_PASSWORD=os.environ.get('DB_PASSWORD'),
-        #DB_HOST=os.environ.get('DB_HOST'),
-        #DATABASE_NAME=os.environ.get('DATABASE_NAME'),
-        #DATABASE_URL=os.environ.get('DATABASE_URL'),
         SQLALCHEMY_DATABASE_URI=os.environ.get('DATABASE_URL'),
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
 
@@ -51,6 +47,9 @@ def create_app():
     # register blueprints
     application.register_blueprint(blog_app)
     application.register_blueprint(author_app)
+
+    # Wrap app with Talisman for HTTPS
+    Talisman(application)
 
     return application
 
