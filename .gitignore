@@ -218,3 +218,4 @@ fabric.properties
 # config file for DB connections etc.
 config.py
 .migrationsbackup
+.env_variables.txt
