@@ -33,6 +33,7 @@ s3 = boto3.resource('s3')
 # typeahead for categories?
 # if session.id stuff for landing page? show different buttons instead of register if signed in.
 # fix image processing on edit view
+# threading or workers for posting?
 
 
 @blog_app.route('/blog')
