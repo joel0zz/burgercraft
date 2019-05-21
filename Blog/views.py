@@ -97,12 +97,11 @@ def post():
             image_base = 300
             wpercent = (image_base / float(img.size[0]))
             hsize = int((float(img.size[1]) * float(wpercent)))
-            img.resize((image_base, hsize), Image.ANTIALIAS)
-            resized = img.save(f)
+            im2 = img.resize((image_base, hsize), Image.ANTIALIAS)
 
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
-            resized.save(img_bytes, format='PNG')
+            im2.save(img_bytes, format='PNG')
             s3_object = s3.Object(BUCKET_NAME, file_name)
             s3_object.put(
                 Body=img_bytes.getvalue(),
