@@ -13,6 +13,9 @@ migrate = Migrate()
 def create_app():
     application = Flask(__name__)
 
+    # Wrap app with Talisman for HTTPS
+    Talisman(application)
+
     # load config
     application.config.from_mapping(
         BLOG_NAME=os.environ.get('BLOG_NAME'),
@@ -47,9 +50,6 @@ def create_app():
     # register blueprints
     application.register_blueprint(blog_app)
     application.register_blueprint(author_app)
-
-    # Wrap app with Talisman for HTTPS
-    Talisman(application)
 
     return application
 
