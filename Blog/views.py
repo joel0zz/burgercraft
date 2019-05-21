@@ -99,19 +99,6 @@ def post():
             hsize = int((float(img.size[1]) * float(wpercent)))
             resized_img = img.resize((image_base, hsize), Image.ANTIALIAS)
 
-            # orientation
-            for orientation in ExifTags.TAGS.keys():
-                if ExifTags.TAGS[orientation] == 'Orientation':
-                    break
-            exif = dict(resized_img._getexif().items())
-
-            if exif[orientation] == 3:
-                resized_img = resized_img.rotate(180, expand=True)
-            elif exif[orientation] == 6:
-                resized_img = resized_img.rotate(270, expand=True)
-            elif exif[orientation] == 8:
-                resized_img = resized_img.rotate(90, expand=True)
-
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
             resized_img.save(img_bytes, format='PNG')
