@@ -99,8 +99,26 @@ def post():
             hsize = int((float(img.size[1]) * float(wpercent)))
             resized_img = img.resize((image_base, hsize), Image.ANTIALIAS)
 
+            #orientation
+            if hasattr(resized_img, '_getexif'):
+                exif = resized_img._getexif()
+                if exif:
+                    for tag, label in ExifTags.TAGS.items():
+                        if label == 'Orientation':
+                            orientation = tag
+                            break
+                    if orientation in exif:
+                        if exif[orientation] == 3:
+                            image = resized_img.rotate(180, expand=True)
+                        elif exif[orientation] == 6:
+                            image = resized_img.rotate(270, expand=True)
+                        elif exif[orientation] == 8:
+                            image = resized_img.rotate(90, expand=True)
+
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
+            if image:
+                image.save(img_bytes, format='PNG')
             resized_img.save(img_bytes, format='PNG')
             s3_object = s3.Object(BUCKET_NAME, file_name)
             s3_object.put(
