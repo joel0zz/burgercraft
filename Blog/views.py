@@ -120,11 +120,11 @@ def post():
 
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
-            img.save(img_bytes, format='JPG')
+            img.save(img_bytes, format='JPEG')
             s3_object = s3.Object(BUCKET_NAME, file_name)
             s3_object.put(
                 Body=img_bytes.getvalue(),
-                ContentType='image/jpg'
+                ContentType='image/jpeg'
             )
 
         # Create new category in DB, if submitted in form.
