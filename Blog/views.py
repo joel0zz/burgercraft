@@ -100,23 +100,22 @@ def post():
             img.resize((image_base, hsize), Image.ANTIALIAS)
 
             # orientation
-            try:
-                for orientation in ExifTags.TAGS.keys():
-                    if ExifTags.TAGS[orientation] == 'Orientation':
-                        break
-                exif = dict(img._getexif().items())
-                print(exif)
-
-                if exif[orientation] == 3:
-                    img = img.rotate(180, expand=True)
-                elif exif[orientation] == 6:
-                    img = img.rotate(270, expand=True)
-                elif exif[orientation] == 8:
-                    img = img.rotate(90, expand=True)
-
-            except (AttributeError, KeyError, IndexError):
-                # cases: image don't have getexif
-                pass
+            # try:
+            #     for orientation in ExifTags.TAGS.keys():
+            #         if ExifTags.TAGS[orientation] == 'Orientation':
+            #             break
+            #     exif = dict(img._getexif().items())
+            #
+            #     if exif[orientation] == 3:
+            #         img = img.rotate(180, expand=True)
+            #     elif exif[orientation] == 6:
+            #         img = img.rotate(270, expand=True)
+            #     elif exif[orientation] == 8:
+            #         img = img.rotate(90, expand=True)
+            #
+            # except (AttributeError, KeyError, IndexError):
+            #     # cases: image don't have getexif
+            #     pass
 
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
