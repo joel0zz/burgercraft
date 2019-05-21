@@ -29,12 +29,7 @@ def create_app():
     #     # }
 
     csp = {
-        'default-src': '*',
-        'img-src': '*',
-        'media-src': [
-            '*',
-        ],
-        'script-src': '*'
+        'default-src': '*'
     }
 
     Talisman(application, content_security_policy=csp)
