@@ -90,7 +90,7 @@ def post():
         if form.image.data:
             f = form.image.data
             image_id = str(uuid.uuid4())
-            file_name = image_id + '.jpg'
+            file_name = image_id + '.png'
             img = Image.open(f)
 
             # resize
@@ -117,11 +117,11 @@ def post():
 
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
-            resized_img.save(img_bytes, format='JPEG')
+            resized_img.save(img_bytes, format='PNG')
             s3_object = s3.Object(BUCKET_NAME, file_name)
             s3_object.put(
                 Body=img_bytes.getvalue(),
-                ContentType='image/jpeg'
+                ContentType='image/png'
             )
 
         # Create new category in DB, if submitted in form.
