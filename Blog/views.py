@@ -90,7 +90,7 @@ def post():
         if form.image.data:
             f = form.image.data
             image_id = str(uuid.uuid4())
-            file_name = image_id + '.png'
+            file_name = image_id + '.jpeg'
             img = Image.open(f)
 
             # resize
