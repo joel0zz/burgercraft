@@ -90,39 +90,42 @@ def post():
         if form.image.data:
             f = form.image.data
             image_id = str(uuid.uuid4())
-            file_name = image_id + '.png'
+            file_name = image_id + '.jpg'
             img = Image.open(f)
 
             # resize
             image_base = 600
             wpercent = (image_base / float(img.size[0]))
             hsize = int((float(img.size[1]) * float(wpercent)))
-            resized_img = img.resize((image_base, hsize), Image.ANTIALIAS)
+            img.resize((image_base, hsize), Image.ANTIALIAS)
 
-            #orientation
-            # if hasattr(resized_img, '_getexif'):
-            #     exif = resized_img._getexif()
-            #     if exif:
-            #         for tag, label in ExifTags.TAGS.items():
-            #             if label == 'Orientation':
-            #                 orientation = tag
-            #                 break
-            #         if orientation in exif:
-            #             if exif[orientation] == 3:
-            #                 image = resized_img.rotate(180, expand=True)
-            #             elif exif[orientation] == 6:
-            #                 image = resized_img.rotate(270, expand=True)
-            #             elif exif[orientation] == 8:
-            #                 image = resized_img.rotate(90, expand=True)
+            # orientation
+            try:
+                for orientation in ExifTags.TAGS.keys():
+                    if ExifTags.TAGS[orientation] == 'Orientation':
+                        break
+                exif = dict(img._getexif().items())
+                print(exif)
 
-            # Send the Bytes to S3
-            img_bytes = io.BytesIO()
-            resized_img.save(img_bytes, format='PNG')
-            s3_object = s3.Object(BUCKET_NAME, file_name)
-            s3_object.put(
-                Body=img_bytes.getvalue(),
-                ContentType='image/png'
-            )
+                if exif[orientation] == 3:
+                    img = img.rotate(180, expand=True)
+                elif exif[orientation] == 6:
+                    img = img.rotate(270, expand=True)
+                elif exif[orientation] == 8:
+                    img = img.rotate(90, expand=True)
+
+                # Send the Bytes to S3
+                img_bytes = io.BytesIO()
+                img.save(img_bytes, format='JPG')
+                s3_object = s3.Object(BUCKET_NAME, file_name)
+                s3_object.put(
+                        Body=img_bytes.getvalue(),
+                        ContentType='image/jpg'
+                   )
+
+            except (AttributeError, KeyError, IndexError):
+                # cases: image don't have getexif
+                pass
 
         # Create new category in DB, if submitted in form.
         if form.new_category.data:
