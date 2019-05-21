@@ -6,32 +6,12 @@
 
 {% block content %}
 
-{#<header class="jumbotron jumbotron-fluid">#}
-{#    <div class="container-fluid text-center">#}
-{#       <h1 class="display-3 text-success" ></h1>#}
-{#       <p class="lead pb-4"></p>#}
-{#    </div>#}
-{##}
-{#<style>#}
-{#        .jumbotron {#}
-{#    background: url("{{ url_for('static', filename='') }}") no-repeat center;#}
-{#}#}
-{##}
-{#</style>#}
-{#</header>#}
 
-    <style>
-        img.resize {
-        max-width: 50%;
-        max-height: 50%;
-    }
-    </style>
-
-<div class="container-fixed">
+<div class="container-sm">
     <div class="col-md-4">
       <div class="thumbnail">
         <a href="https://{{ config['REGION'] }}.amazonaws.com/{{ config['BUCKET_NAME'] }}/mikeller.png" target="_blank">
-          <img class="resize" src="https://{{ config['REGION'] }}.amazonaws.com/{{ config['BUCKET_NAME'] }}/mikeller.png" alt="Nature">
+          <img src="https://{{ config['REGION'] }}.amazonaws.com/{{ config['BUCKET_NAME'] }}/mikeller.png" alt="Nature">
           <div class="caption">
           </div>
         </a>
