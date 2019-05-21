@@ -94,7 +94,7 @@ def post():
             img = Image.open(f)
 
             # resize
-            image_base = 600
+            image_base = 300
             wpercent = (image_base / float(img.size[0]))
             hsize = int((float(img.size[1]) * float(wpercent)))
             img.resize((image_base, hsize), Image.ANTIALIAS)
