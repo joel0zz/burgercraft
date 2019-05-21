@@ -16,16 +16,25 @@ def create_app():
     # Wrap app with Talisman for HTTPS
 
     # Whitelist resources for bootstrap etc.
+    # csp2 = {
+    #     #     'default-src': [
+    #     #         '\'self\'',
+    #     #         'https://stackpath.bootstrapcdn.com/bootstrap/*',
+    #     #         'https://use.fontawesome.com/releases/*',
+    #     #         'https://code.jquery.com/*',
+    #     #         'https://cdnjs.cloudflare.com/ajax/*',
+    #     #         'https://stackpath.bootstrapcdn.com/bootstrap/*',
+    #     #         'https://cdn.passprotect.io/*'
+    #     #     ]
+    #     # }
+
     csp = {
-        'default-src': [
-            '\'self\'',
-            'https://stackpath.bootstrapcdn.com/bootstrap/*',
-            'https://use.fontawesome.com/releases/*',
-            'https://code.jquery.com/*',
-            'https://cdnjs.cloudflare.com/ajax/*',
-            'https://stackpath.bootstrapcdn.com/bootstrap/*',
-            'https://cdn.passprotect.io/*'
-        ]
+        'default-src': '\'self\'',
+        'img-src': '*',
+        'media-src': [
+            '*',
+        ],
+        'script-src': '*'
     }
 
     Talisman(application, content_security_policy=csp)
