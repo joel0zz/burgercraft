@@ -29,7 +29,7 @@ def create_app():
     #     # }
 
     csp = {
-        'default-src': '\'self\'',
+        'default-src': '*',
         'img-src': '*',
         'media-src': [
             '*',
