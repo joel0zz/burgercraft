@@ -114,18 +114,18 @@ def post():
                 elif exif[orientation] == 8:
                     img = img.rotate(90, expand=True)
 
-                # Send the Bytes to S3
-                img_bytes = io.BytesIO()
-                img.save(img_bytes, format='JPG')
-                s3_object = s3.Object(BUCKET_NAME, file_name)
-                s3_object.put(
-                        Body=img_bytes.getvalue(),
-                        ContentType='image/jpg'
-                   )
-
             except (AttributeError, KeyError, IndexError):
                 # cases: image don't have getexif
                 pass
+
+            # Send the Bytes to S3
+            img_bytes = io.BytesIO()
+            img.save(img_bytes, format='JPG')
+            s3_object = s3.Object(BUCKET_NAME, file_name)
+            s3_object.put(
+                Body=img_bytes.getvalue(),
+                ContentType='image/jpg'
+            )
 
         # Create new category in DB, if submitted in form.
         if form.new_category.data:
