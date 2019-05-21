@@ -2,7 +2,7 @@ from flask import Blueprint, session, render_template, flash, redirect, url_for,
 from slugify import slugify
 from werkzeug.security import generate_password_hash
 import uuid
-from PIL import Image
+from PIL import Image, ExifTags
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 import boto3
@@ -94,14 +94,27 @@ def post():
             img = Image.open(f)
 
             # resize
-            image_base = 300
+            image_base = 600
             wpercent = (image_base / float(img.size[0]))
             hsize = int((float(img.size[1]) * float(wpercent)))
-            im2 = img.resize((image_base, hsize), Image.ANTIALIAS)
+            resized_img = img.resize((image_base, hsize), Image.ANTIALIAS)
+
+            # orientation
+            for orientation in ExifTags.TAGS.keys():
+                if ExifTags.TAGS[orientation] == 'Orientation':
+                    break
+            exif = dict(resized_img._getexif().items())
+
+            if exif[orientation] == 3:
+                resized_img = resized_img.rotate(180, expand=True)
+            elif exif[orientation] == 6:
+                resized_img = resized_img.rotate(270, expand=True)
+            elif exif[orientation] == 8:
+                resized_img = resized_img.rotate(90, expand=True)
 
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
-            im2.save(img_bytes, format='PNG')
+            resized_img.save(img_bytes, format='PNG')
             s3_object = s3.Object(BUCKET_NAME, file_name)
             s3_object.put(
                 Body=img_bytes.getvalue(),
