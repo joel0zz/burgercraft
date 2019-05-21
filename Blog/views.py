@@ -32,6 +32,7 @@ s3 = boto3.resource('s3')
 
 # typeahead for categories?
 # if session.id stuff for landing page? show different buttons instead of register if signed in.
+# fix image processing on edit view
 
 
 @blog_app.route('/blog')
@@ -93,29 +94,8 @@ def post():
             file_name = image_id + '.jpg'
             img = Image.open(f)
 
-            # resize
-            image_base = 600
-            wpercent = (image_base / float(img.size[0]))
-            hsize = int((float(img.size[1]) * float(wpercent)))
-            img.resize((image_base, hsize), Image.ANTIALIAS)
-
-            # orientation
-            # try:
-            #     for orientation in ExifTags.TAGS.keys():
-            #         if ExifTags.TAGS[orientation] == 'Orientation':
-            #             break
-            #     exif = dict(img._getexif().items())
-            #
-            #     if exif[orientation] == 3:
-            #         img = img.rotate(180, expand=True)
-            #     elif exif[orientation] == 6:
-            #         img = img.rotate(270, expand=True)
-            #     elif exif[orientation] == 8:
-            #         img = img.rotate(90, expand=True)
-            #
-            # except (AttributeError, KeyError, IndexError):
-            #     # cases: image don't have getexif
-            #     pass
+            # orientate & resize image
+            img = orientate_resize_image(img)
 
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
@@ -267,7 +247,30 @@ def ratelimit_handler(e):
     return redirect(url_for('.index'))
 
 
+def orientate_resize_image(img):
+    try:
+        for orientation in ExifTags.TAGS.keys():
+            if ExifTags.TAGS[orientation] == 'Orientation':
+                break
+        exif = dict(img._getexif().items())
 
+        if exif[orientation] == 3:
+            img = img.rotate(180, expand=True)
+        elif exif[orientation] == 6:
+            img = img.rotate(270, expand=True)
+        elif exif[orientation] == 8:
+            img = img.rotate(90, expand=True)
+
+    except (AttributeError, KeyError, IndexError):
+        # cases: image don't have getexif
+        pass
+
+    image_base = 600
+    wpercent = (image_base / float(img.size[0]))
+    hsize = int((float(img.size[1]) * float(wpercent)))
+    img = img.resize((image_base, hsize), Image.ANTIALIAS)
+
+    return img
 
 
 
