@@ -66,7 +66,7 @@ def profile():
         author.username = username
         db.session.commit()
         db.session.refresh(author)
-        db.session.close()
+        #db.session.close()
         flash("Username successfully changed.", "success")
 
     return render_template('blog/profile.html', posts=posts, password_form=password_form, username_form=username_form, author=author)
@@ -131,7 +131,7 @@ def post():
         slug = slugify(str(post.id) + "-" + post.title)
         post.slug = slug
         db.session.commit()
-        db.session.close()
+        #db.session.close()
 
         flash('Article Posted', 'success')
         return redirect(url_for('.index'))
