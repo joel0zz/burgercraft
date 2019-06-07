@@ -211,7 +211,7 @@ def edit(slug):
         db.session.commit()
         db.session.close()
         flash('Article Edited', 'success')
-        return redirect(url_for('.article', slug=post.slug))
+        #return redirect(url_for('.article', slug=post.slug))
 
     return render_template('blog/post.html', form=form, post=post, action='edit')
 
