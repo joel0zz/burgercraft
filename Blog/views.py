@@ -20,21 +20,26 @@ from author.forms import ResetPasswordForm, ChangeUsernameForm
 from author.decorators import login_required_check_confirmed, login_required
 from worker import conn
 
-BUCKET_NAME = os.environ.get('BUCKET_NAME')
 
+BUCKET_NAME = os.environ.get('BUCKET_NAME')
 limiter = Limiter(
         create_app(),
         key_func=get_remote_address
     )
-
 POSTS_PER_PAGE = 5
-
 s3 = boto3.resource('s3')
+q = Queue(connection=conn)
 
 
 
 # typeahead for categories?
 # threading or workers for posting?
+
+
+@blog_app.route('/redis')
+def redis():
+    result = redis_test()
+    return result
 
 
 @blog_app.route('/blog')
@@ -273,7 +278,8 @@ def orientate_resize_image(img):
 
     return img
 
-
+def redis_test():
+    return {[x for x in range(1, 10000)]}
 
 
 
