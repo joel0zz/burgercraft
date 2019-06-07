@@ -58,7 +58,6 @@ def profile():
         hashed_password = generate_password_hash(password_form.password.data)  # generate hash from pass form data.
         author.password = hashed_password  # change authors password
         db.session.commit()
-        db.session.close()
         flash("Password successfully changed.", "success")
 
     if username_form.validate_on_submit():
@@ -66,7 +65,6 @@ def profile():
         author.username = username
         db.session.commit()
         db.session.refresh(author)
-        #db.session.close()
         flash("Username successfully changed.", "success")
 
     return render_template('blog/profile.html', posts=posts, password_form=password_form, username_form=username_form, author=author)
@@ -131,7 +129,6 @@ def post():
         slug = slugify(str(post.id) + "-" + post.title)
         post.slug = slug
         db.session.commit()
-        db.session.close()
 
         flash('Article Posted', 'success')
         return redirect(url_for('.index'))
@@ -158,7 +155,6 @@ def article(slug):
         post.comments.append(comment)  # append comment to post (comments field of the model)
         db.session.add(comment)
         db.session.commit()
-        db.session.close()
         flash("Thank you for taking the time to comment.", 'success')
         return redirect(url_for('.article', slug=slug))
 
@@ -208,7 +204,7 @@ def edit(slug):
         if form.title.data != original_title:
             post.slug = slugify(str(post.id) + '-' + form.title.data)
 
-        session.expire_on_commit = False
+        session.expire_on_commit = False  # Keeps session open for article view, or it bombs out.
         db.session.commit()
         flash('Article Edited', 'success')
         return redirect(url_for('.article', slug=post.slug))
@@ -222,7 +218,6 @@ def delete(slug):
         post = Post.query.filter_by(slug=slug).first_or_404()
         post.live = False
         db.session.commit()
-        db.session.close()
         flash('Article deleted', 'success')
         return redirect(url_for('.index'))
 
