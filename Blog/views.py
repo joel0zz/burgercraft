@@ -32,7 +32,6 @@ s3 = boto3.resource('s3')
 
 # typeahead for categories?
 # if session.id stuff for landing page? show different buttons instead of register if signed in.
-# fix image processing on edit view
 # threading or workers for posting?
 
 
@@ -81,7 +80,7 @@ def landing():
 
 @blog_app.route('/post', methods=('GET', 'POST'))
 @login_required_check_confirmed
-#@limiter.limit("5/hour")
+@limiter.limit("5/hour")
 def post():
     form = PostForm()
 
@@ -143,7 +142,8 @@ def post():
 
 # no un-auth comments? all users must be signed up to comment.
 @blog_app.route('/posts/<slug>', methods=['GET', 'POST'])
-#@limiter.limit("20/hour")
+@login_required_check_confirmed
+@limiter.limit("20/hour")
 def article(slug):
     form = CommentForm()
     post = Post.query.filter_by(slug=slug).first()
@@ -180,16 +180,19 @@ def edit(slug):
         if form.image.data:
             f = form.image.data
             image_id = str(uuid.uuid4())
-            file_name = image_id + '.png'
+            file_name = image_id + '.jpg'
             img = Image.open(f)
+
+            # orientate & resize image
+            img = orientate_resize_image(img)
 
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
-            img.save(img_bytes, format='PNG')
+            img.save(img_bytes, format='JPEG')
             s3_object = s3.Object(BUCKET_NAME, file_name)
             s3_object.put(
                 Body=img_bytes.getvalue(),
-                ContentType='image/png'
+                ContentType='image/jpeg'
             )
 
             post.image = image_id
