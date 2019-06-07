@@ -8,6 +8,7 @@ from flask_limiter.util import get_remote_address
 import boto3
 import io
 import os
+from rq import Queue
 
 blog_app = Blueprint('blog_app', __name__)
 
@@ -17,6 +18,7 @@ from author.models import Author
 from Blog.forms import PostForm, CommentForm
 from author.forms import ResetPasswordForm, ChangeUsernameForm
 from author.decorators import login_required_check_confirmed, login_required
+from worker import conn
 
 BUCKET_NAME = os.environ.get('BUCKET_NAME')
 
@@ -29,6 +31,7 @@ POSTS_PER_PAGE = 5
 
 s3 = boto3.resource('s3')
 
+q = Queue(connection=conn)
 
 # typeahead for categories?
 # threading or workers for posting?
@@ -92,7 +95,7 @@ def post():
             img = Image.open(f)
 
             # orientate & resize image
-            img = orientate_resize_image(img)
+            img = q.enqueue(orientate_resize_image(img), 'http://heroku.com')
 
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
