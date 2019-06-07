@@ -31,7 +31,6 @@ s3 = boto3.resource('s3')
 
 
 # typeahead for categories?
-# if session.id stuff for landing page? show different buttons instead of register if signed in.
 # threading or workers for posting?
 
 

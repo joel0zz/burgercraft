@@ -15,6 +15,7 @@ from author.decorators import login_required, already_logged_in
 application = create_app()
 mail = Mail(application)
 
+
 @author_app.route('/register', methods=['GET', 'POST'])
 def register():
     form = RegisterForm()
