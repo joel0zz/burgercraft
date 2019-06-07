@@ -131,7 +131,7 @@ def post():
         slug = slugify(str(post.id) + "-" + post.title)
         post.slug = slug
         db.session.commit()
-        #db.session.close()
+        db.session.close()
 
         flash('Article Posted', 'success')
         return redirect(url_for('.index'))
@@ -202,16 +202,16 @@ def edit(slug):
         if form.new_category.data:
             new_category = Category(form.new_category.data)
             db.session.add(new_category)
-            #db.session.flush()
+            db.session.flush()
             post.category = new_category
 
         if form.title.data != original_title:
             post.slug = slugify(str(post.id) + '-' + form.title.data)
 
+        session.expire_on_commit = False
         db.session.commit()
-        db.session.close()
         flash('Article Edited', 'success')
-        #return redirect(url_for('.article', slug=post.slug))
+        return redirect(url_for('.article', slug=post.slug))
 
     return render_template('blog/post.html', form=form, post=post, action='edit')
 
