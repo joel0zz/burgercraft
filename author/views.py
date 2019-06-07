@@ -4,6 +4,7 @@ from itsdangerous import URLSafeTimedSerializer
 from flask_mail import Mail, Message
 import datetime
 from threading import Thread
+from rq import Queue
 
 author_app = Blueprint('author_app', __name__)
 
@@ -11,7 +12,10 @@ from application import db, create_app
 from author.models import Author
 from author.forms import RegisterForm, LoginForm, SendPasswordResetForm, ResetPasswordForm
 from author.decorators import login_required, already_logged_in
+from worker import conn
 
+
+q = Queue(connection=conn)
 application = create_app()
 mail = Mail(application)
 
@@ -78,7 +82,7 @@ def send_password_reset():
             confirm_url = url_for('.reset_password', token=token, _external=True)
             html = render_template('author/reset_email.html', confirm_url=confirm_url)
             subject = "Password Reset"
-            send_email(author.email, subject, html)
+            q.enqueue(send_email, args=(author.email, subject, html))
 
             flash("Thanks, please check your inbox for instructions.", "success")
             return redirect(url_for('.login'))
@@ -168,9 +172,9 @@ def confirm_token(token, expiration=3600):
     return email
 
 
-def send_async_email(app, msg):
-    with app.app_context():
-        mail.send(msg)
+# def send_async_email(app, msg):
+#     with app.app_context():
+#         mail.send(msg)
 
 
 def send_email(to, subject, template):
@@ -180,6 +184,6 @@ def send_email(to, subject, template):
         html=template,
         sender=application.config['MAIL_DEFAULT_SENDER']
     )
-    Thread(target=send_async_email, args=(application, msg)).start()  # creates a job to send the email.
-   # mail.send(msg)
+    #Thread(target=send_async_email, args=(application, msg)).start()  # creates a job to send the email.
+    mail.send(msg)
 

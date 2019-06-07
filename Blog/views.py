@@ -31,7 +31,7 @@ POSTS_PER_PAGE = 5
 
 s3 = boto3.resource('s3')
 
-q = Queue(connection=conn)
+
 
 # typeahead for categories?
 # threading or workers for posting?
@@ -95,7 +95,7 @@ def post():
             img = Image.open(f)
 
             # orientate & resize image
-            img = q.enqueue(orientate_resize_image, img)
+            img = orientate_resize_image(img)
 
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
