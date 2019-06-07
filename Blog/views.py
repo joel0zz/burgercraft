@@ -95,7 +95,7 @@ def post():
             img = Image.open(f)
 
             # orientate & resize image
-            img = q.enqueue(orientate_resize_image(img), 'http://heroku.com')
+            img = q.enqueue(orientate_resize_image, img)
 
             # Send the Bytes to S3
             img_bytes = io.BytesIO()
