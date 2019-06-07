@@ -279,7 +279,7 @@ def orientate_resize_image(img):
     return img
 
 def redis_test():
-    return {[x for x in range(1, 10000)]}
+    return {'numbers': [x for x in range(1, 10000)]}
 
 
 
