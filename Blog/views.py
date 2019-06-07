@@ -38,8 +38,8 @@ q = Queue(connection=conn)
 
 @blog_app.route('/redis')
 def redis():
-    result = redis_test()
-    return result
+    result = q.enqueue(redis_test)
+    return str(result)
 
 
 @blog_app.route('/blog')
@@ -278,8 +278,9 @@ def orientate_resize_image(img):
 
     return img
 
+
 def redis_test():
-    return {'numbers': [x for x in range(1, 10000)]}
+    return [x for x in range(1, 10000)]
 
 
 
