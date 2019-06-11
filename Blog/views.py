@@ -1,4 +1,4 @@
-from flask import Blueprint, session, render_template, flash, redirect, url_for, request
+from flask import Blueprint, session, render_template, flash, redirect, url_for, request, jsonify
 from slugify import slugify
 from werkzeug.security import generate_password_hash
 import uuid
@@ -20,6 +20,7 @@ from Blog.forms import PostForm, CommentForm
 from author.forms import ResetPasswordForm, ChangeUsernameForm
 from author.decorators import login_required_check_confirmed, login_required
 from worker import conn
+from bot import create_neural_network, get_bot_response
 
 
 BUCKET_NAME = os.environ.get('BUCKET_NAME')
@@ -31,10 +32,15 @@ POSTS_PER_PAGE = 5
 s3 = boto3.resource('s3')
 q = Queue(connection=conn)
 
+model, words, labels = create_neural_network()
 
 
-# typeahead for categories?
-# threading or workers for posting?
+@blog_app.route('/send_message', methods=['POST'])
+def send_message():
+    user_inp = request.form['message']
+    bot_text = get_bot_response(model, words, labels, user_inp)
+    response_text = {"message": bot_text}
+    return jsonify(response_text)
 
 
 @blog_app.route('/redis')

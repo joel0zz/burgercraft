@@ -1,0 +1,27 @@
+{"intents": [
+  {
+    "tag": "hello",
+    "patterns": ["Hi", "How are you", "Hello", "whats up", "is anyone there?", "yo", "good day", "wassup"],
+    "responses": ["Greetings Human, What would you like to know about beers/burgers?"],
+    "context_set": ""
+  },
+  {
+    "tag": "neipa",
+    "patterns": ["what is a neipa", "what's in a NEIPA?", "what makes up a NEIPA", "Can you please tell me what a NEIPA is"],
+    "responses": ["New England IPAs are beers that are purposely hazy or cloudy, which can give these brews a smooth, creamy mouthfeel. a departure from the light/dry mouthfeel you often get with West Coast IPAs, with little to no hop bitterness at the end utilizing hops that impart a tropical, juicy sweetness rather than the classic bitter, dank or citrusy flavors West Coast IPA lovers have come to expect."],
+    "context_set": ""
+  },
+  {
+    "tag": "thankyou",
+    "patterns": ["thankyou", "thank you", "thanks bot", "cheers", "awesome, thanks!", "cheers cobba", "nice one", "perfect"],
+    "responses": ["No worries! Feel free to ask more questions. Otherwise, enjoy your time at burgercraft :)"],
+    "context_set": ""
+  },
+  {
+    "tag": "bor",
+    "patterns": ["bor", "borrrrr", "borr", "borrr", "hello borr", "hello baaaa", "hello baa", "BORRR"],
+    "responses": ["YESSS MAAAAAA"],
+    "context_set": ""
+  }
+]
+}

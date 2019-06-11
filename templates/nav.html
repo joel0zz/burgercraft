@@ -21,6 +21,9 @@
                         <a class="nav-link" href="{{ url_for('author_app.logout') }}"><i class="fas fa-sign-out-alt">&nbsp;</i>Logout</a>
                     </li>
                 {% else %}
+                     <li class="nav-item">
+                        <a class="nav-link" href="#chatModal" data-toggle="modal" data-target="#chatModal" ><i class="fas fa-robot">&nbsp;</i>burgercraftBot</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="{{ url_for('blog_app.index') }}"><i class="fas fa-question">&nbsp;</i>Blog</a>
                     </li>
@@ -31,3 +34,40 @@
             </ul>
     </nav>
 </div>
+
+<div class="modal" id="chatModal">
+              <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+
+                      <!-- Modal Header -->
+                      <div class="modal-header">
+                          <h4 class="modal-title">Ask & you shall receive</h4>
+                      </div>
+
+                      <!-- Modal body -->
+                      <div class="modal-body">
+                          <div class="container h-100">
+                              <div class="row align-items-center h-100">
+                                  <div class="col-md-8 col-sm-12 mx-auto">
+                                      <div class="h-100 justify-content-center">
+                                          <div class="chat-container" style="overflow: auto; max-height: 80vh">
+                                              <!-- chat messages -->
+                                          </div>
+                                          <form id="target">
+                                              <input class="input" type="text" value="" placeholder="Enter message..."
+                                                     id="input_message"/>
+                                              <input type="submit" hidden>
+                                          </form>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+
+                      <!-- Modal footer -->
+                      <div class="modal-footer">
+                          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                      </div>
+                  </div>
+              </div>
+          </div>

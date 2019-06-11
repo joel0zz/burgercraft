@@ -1,4 +1,4 @@
-
+﻿
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
 !.elasticbeanstalk/*.cfg.yml
@@ -220,3 +220,6 @@ config.py
 .migrationsbackup
 .env_variables.txt
 rds-ca-2015-ap-southeast-2.pem
+model.*
+data.*
+checkpoint
