@@ -18,7 +18,7 @@ def create_app():
 
     # Wrap app with Talisman for HTTPS
     csp = {'default-src': '*'}
-    #Talisman(application, content_security_policy=csp)
+    Talisman(application, content_security_policy=csp)
 
     # load config
     application.config.from_mapping(
