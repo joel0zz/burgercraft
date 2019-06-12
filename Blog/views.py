@@ -1,3 +1,11 @@
+from bot import create_neural_network, get_bot_response
+from worker import conn
+from author.decorators import login_required_check_confirmed, login_required
+from author.forms import ResetPasswordForm, ChangeUsernameForm
+from Blog.forms import PostForm, CommentForm
+from author.models import Author
+from Blog.models import Post, Category, Comment
+from application import db, create_app
 from flask import Blueprint, session, render_template, flash, redirect, url_for, request, jsonify
 from slugify import slugify
 from werkzeug.security import generate_password_hash
@@ -13,21 +21,12 @@ from rq.job import Job
 
 blog_app = Blueprint('blog_app', __name__)
 
-from application import db, create_app
-from Blog.models import Post, Category, Comment
-from author.models import Author
-from Blog.forms import PostForm, CommentForm
-from author.forms import ResetPasswordForm, ChangeUsernameForm
-from author.decorators import login_required_check_confirmed, login_required
-from worker import conn
-from bot import create_neural_network, get_bot_response
-
 
 BUCKET_NAME = os.environ.get('BUCKET_NAME')
 limiter = Limiter(
-        create_app(),
-        key_func=get_remote_address
-    )
+    create_app(),
+    key_func=get_remote_address
+)
 POSTS_PER_PAGE = 5
 s3 = boto3.resource('s3')
 q = Queue(connection=conn)
@@ -62,7 +61,7 @@ def results(job_key):
 @blog_app.route('/blog')
 def index():
     page = int(request.values.get('page', '1'))
-    posts = Post.query.filter_by(live=True).order_by(Post.publish_date.desc()) \
+    posts = Post.query.filter_by(live=True).order_by(Post.publish_date.desc())\
         .paginate(page, POSTS_PER_PAGE, False)
     return render_template('blog/index.html',
                            posts=posts,
@@ -73,14 +72,16 @@ def index():
 @login_required_check_confirmed
 def profile():
     author = Author.query.get(session['id'])
-    posts = Post.query.filter_by(author_id=author.id).order_by(Post.publish_date.desc())[:10]  # Last 10 posts from user
+    posts = Post.query.filter_by(author_id=author.id).order_by(
+        Post.publish_date.desc())[:10]  # Last 10 posts from user
 
     # forms that will be used for the modals on profile page.
     password_form = ResetPasswordForm()
     username_form = ChangeUsernameForm()
 
     if password_form.validate_on_submit():
-        hashed_password = generate_password_hash(password_form.password.data)  # generate hash from pass form data.
+        # generate hash from pass form data.
+        hashed_password = generate_password_hash(password_form.password.data)
         author.password = hashed_password  # change authors password
         db.session.commit()
         flash("Password successfully changed.", "success")
@@ -171,13 +172,15 @@ def article(slug):
     prev_url = request.referrer
 
     if form.validate_on_submit():
-        author = Author.query.get(session['id'])  # query author ID so we can pass username into comment model.
+        # query author ID so we can pass username into comment model.
+        author = Author.query.get(session['id'])
         comment = Comment(
             author.username,  # username of signed in user.
             form.comment.data  # pull comment data from comment form
         )
 
-        post.comments.append(comment)  # append comment to post (comments field of the model)
+        # append comment to post (comments field of the model)
+        post.comments.append(comment)
         db.session.add(comment)
         db.session.commit()
         flash("Thank you for taking the time to comment.", 'success')
@@ -229,7 +232,8 @@ def edit(slug):
         if form.title.data != original_title:
             post.slug = slugify(str(post.id) + '-' + form.title.data)
 
-        session.expire_on_commit = False  # Keeps session open for article view, or it bombs out.
+        # Keeps session open for article view, or it bombs out.
+        session.expire_on_commit = False
         db.session.commit()
         flash('Article Edited', 'success')
         return redirect(url_for('.article', slug=post.slug))
@@ -240,18 +244,19 @@ def edit(slug):
 @blog_app.route('/delete/<slug>')
 @login_required_check_confirmed
 def delete(slug):
-        post = Post.query.filter_by(slug=slug).first_or_404()
-        post.live = False
-        db.session.commit()
-        flash('Article deleted', 'success')
-        return redirect(url_for('.index'))
+    post = Post.query.filter_by(slug=slug).first_or_404()
+    post.live = False
+    db.session.commit()
+    flash('Article deleted', 'success')
+    return redirect(url_for('.index'))
 
 
 @blog_app.route('/categories/<category_id>')
 def categories(category_id):
     category = Category.query.filter_by(id=category_id).first_or_404()
     page = int(request.values.get('page', '1'))
-    posts = category.posts.filter_by(live=True).order_by(Post.publish_date.desc()).paginate(page, POSTS_PER_PAGE, False)
+    posts = category.posts.filter_by(live=True).order_by(
+        Post.publish_date.desc()).paginate(page, POSTS_PER_PAGE, False)
     return render_template('blog/category_posts.html', posts=posts, title=category.name, category_id=category_id)
 
 
@@ -298,7 +303,3 @@ def orientate_resize_image(img):
 
 def redis_test():
     return [x for x in range(1, 10000)]
-
-
-
-
