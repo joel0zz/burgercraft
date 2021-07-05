@@ -219,7 +219,8 @@ fabric.properties
 config.py
 .migrationsbackup
 .env_variables.txt
-rds-ca-2015-ap-southeast-2.pem
+rds*
 model.*
 data.*
 checkpoint
+env_variables*
